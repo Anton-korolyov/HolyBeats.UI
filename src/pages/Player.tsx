@@ -28,7 +28,7 @@ export default function Player() {
   const [selectedPlaylistId, setSelectedPlaylistId] =
     useState<number | null>(null);
 
-  const [playlistTracks, setPlaylistTracks] = useState<Track[]>([]);
+  const [_playlistTracks, setPlaylistTracks] = useState<Track[]>([]);
   const [newPlaylist, setNewPlaylist] = useState("");
 
   // ui
