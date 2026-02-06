@@ -5,7 +5,7 @@ import { useRef, useState, useEffect } from "react";
 type Props = {
   track: Track;
   playlist?: Track[];
-  onClose: () => void;
+  onClose: () => void;           // в mini → открыть full
   onChangeTrack?: (t: Track) => void;
   mini?: boolean;
 };
@@ -25,7 +25,7 @@ export default function FullPlayer({
   const [playing, setPlaying] = useState(true);
 
   /* ================================
-     AUTOPLAY ON TRACK CHANGE
+     AUTOPLAY
   ================================= */
 
   useEffect(() => {
@@ -76,30 +76,30 @@ export default function FullPlayer({
   ================================= */
 
   function change(offset: number) {
-  if (!playlist.length || !onChangeTrack) return;
+    if (!playlist.length || !onChangeTrack) return;
 
-  const i = playlist.findIndex(x => x.id === track.id);
+    const i = playlist.findIndex(x => x.id === track.id);
 
-  let next = i + offset;
+    let next = i + offset;
 
-  if (next < 0) next = playlist.length - 1;
-  if (next >= playlist.length) next = 0;
+    if (next < 0) next = playlist.length - 1;
+    if (next >= playlist.length) next = 0;
 
-  onChangeTrack(playlist[next]);
-}
+    onChangeTrack(playlist[next]);
+  }
 
   /* ================================
-     SWIPE
+     SWIPE (FULL ONLY)
   ================================= */
 
-  let startX = 0;
+  const startX = useRef(0);
 
   function onTouchStart(e: React.TouchEvent) {
-    startX = e.touches[0].clientX;
+    startX.current = e.touches[0].clientX;
   }
 
   function onTouchEnd(e: React.TouchEvent) {
-    const dx = e.changedTouches[0].clientX - startX;
+    const dx = e.changedTouches[0].clientX - startX.current;
     if (dx > 80) change(-1);
     if (dx < -80) change(1);
   }
@@ -110,28 +110,30 @@ export default function FullPlayer({
 
   return (
 
-    /* BACKDROP */
-   <div
-  className={`fp-overlay ${mini ? "mini" : "full"}`}
-  onTouchStart={onTouchStart}
-  onTouchEnd={onTouchEnd}
->
+    <div
+      className={`fp-overlay ${mini ? "mini" : "full"}`}
+      onTouchStart={mini ? undefined : onTouchStart}
+      onTouchEnd={mini ? undefined : onTouchEnd}
+    >
 
       {/* CONTAINER */}
       <div
         className="fp-container"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (mini) onClose();   // открыть full
+        }}
       >
 
         {/* CLOSE */}
         {!mini && (
-         <button
-  className="fp-close-center"
-  onClick={(e) => {
-    e.stopPropagation();
-    onClose();
-  }}
->
+          <button
+            className="fp-close-center"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+          >
             ⌄
           </button>
         )}
@@ -143,40 +145,62 @@ export default function FullPlayer({
         <h2 className="fp-title">{track.title}</h2>
 
         {/* PROGRESS */}
-        <input
-          type="range"
-          className="fp-progress"
-          min={0}
-          max={duration || 0}
-          value={progress}
-          onChange={handleSeek}
-        />
+        {!mini && (
+          <input
+            type="range"
+            className="fp-progress"
+            min={0}
+            max={duration || 0}
+            value={progress}
+            onChange={handleSeek}
+            onClick={(e) => e.stopPropagation()}
+          />
+        )}
 
         {/* CONTROLS */}
         <div className="fp-controls">
 
           {!mini && (
-            <button onClick={() => change(-1)}>⏮</button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                change(-1);
+              }}
+            >
+              ⏮
+            </button>
           )}
 
-          <button onClick={togglePlay}>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              togglePlay();
+            }}
+          >
             {playing ? "⏸" : "▶"}
           </button>
 
           {!mini && (
-            <button onClick={() => change(1)}>⏭</button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                change(1);
+              }}
+            >
+              ⏭
+            </button>
           )}
 
         </div>
 
-        {/* SINGLE AUDIO */}
-       <audio
-  ref={audioRef}
-  src={track.url}
-  autoPlay
-  onTimeUpdate={handleTimeUpdate}
-  onEnded={() => change(1)}
-/>
+        {/* AUDIO */}
+        <audio
+          ref={audioRef}
+          src={track.url}
+          autoPlay
+          onTimeUpdate={handleTimeUpdate}
+          onEnded={() => change(1)}
+        />
 
       </div>
 
