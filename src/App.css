@@ -50,8 +50,8 @@ body {
 
 .topbar-left {
   position: absolute;     /* 👈 вырываем из потока */
-  left: 4px;
-  top: 4px;             /* 👈 вылезает вверх */
+  left: 7px;
+  top: 7px;             /* 👈 вылезает вверх */
   z-index: 3000;
 
   flex-shrink: 0;
@@ -59,8 +59,8 @@ body {
 }
 
 .topbar-left img {
-  height: 72px;
-  width: 72px;
+  height: 60px;
+  width: 60px;
   object-fit: contain;
   border-radius: 50%;
   display: block;
