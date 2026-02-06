@@ -181,22 +181,27 @@ export default function Player() {
         ))}
       </div>
 
-      {/* PLAYER (MINI OR FULL) */}
-      {current && (
+      {/* MINI PLAYER */}
+      {current && !showFullPlayer && (
+        <div className="mini-player">
+          <span>{current.title}</span>
+
+          <audio
+            className="audio"
+            controls
+            autoPlay
+            src={current.url}
+          />
+        </div>
+      )}
+
+      {/* FULL PLAYER */}
+      {current && showFullPlayer && (
         <FullPlayer
           track={current}
           playlist={tracks}
           onChangeTrack={setCurrent}
-          mini={!showFullPlayer}
-         onClose={() => {
-  if (showFullPlayer) {
-    // full -> mini
-    setShowFullPlayer(false);
-  } else {
-    // mini -> close
-    setCurrent(null);
-  }
-}}
+          onClose={() => setShowFullPlayer(false)}
         />
       )}
 

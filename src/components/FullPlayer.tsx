@@ -106,12 +106,11 @@ export default function FullPlayer({
   return (
 
     /* BACKDROP */
-    <div
-      className={`fp-overlay ${mini ? "mini" : "full"}`}
-      onClick={onClose}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-    >
+   <div
+  className={`fp-overlay ${mini ? "mini" : "full"}`}
+  onTouchStart={onTouchStart}
+  onTouchEnd={onTouchEnd}
+>
 
       {/* CONTAINER */}
       <div
@@ -121,10 +120,13 @@ export default function FullPlayer({
 
         {/* CLOSE */}
         {!mini && (
-          <button
-            className="fp-close-center"
-            onClick={onClose}
-          >
+         <button
+  className="fp-close-center"
+  onClick={(e) => {
+    e.stopPropagation();
+    onClose();
+  }}
+>
             ⌄
           </button>
         )}
