@@ -127,9 +127,18 @@ h1, h2, h3 {
   width: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 14px;
-  background: linear-gradient(135deg, #8c78ff, #ff78c8);
+
+  background:
+    linear-gradient(135deg, rgba(140,120,255,0.35), rgba(255,120,200,0.35)),
+    url("/covers/default.png");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
   margin-bottom: 12px;
 }
+
 
 /* ===== TITLE ===== */
 
