@@ -206,3 +206,10 @@
 * {
   -webkit-tap-highlight-color: transparent;
 }
+.fp-overlay.mini {
+  pointer-events: none;
+}
+
+.fp-overlay.mini .fp-container {
+  pointer-events: auto;   /* 👈 ВАЖНО */
+}
