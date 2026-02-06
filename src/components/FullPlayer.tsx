@@ -76,12 +76,17 @@ export default function FullPlayer({
   ================================= */
 
   function change(offset: number) {
-    if (!playlist.length || !onChangeTrack) return;
+  if (!playlist.length || !onChangeTrack) return;
 
-    const i = playlist.findIndex(x => x.id === track.id);
-    const next = playlist[i + offset];
-    if (next) onChangeTrack(next);
-  }
+  const i = playlist.findIndex(x => x.id === track.id);
+
+  let next = i + offset;
+
+  if (next < 0) next = playlist.length - 1;
+  if (next >= playlist.length) next = 0;
+
+  onChangeTrack(playlist[next]);
+}
 
   /* ================================
      SWIPE
@@ -165,11 +170,13 @@ export default function FullPlayer({
         </div>
 
         {/* SINGLE AUDIO */}
-        <audio
-          ref={audioRef}
-          onTimeUpdate={handleTimeUpdate}
-          src={track.url}
-        />
+       <audio
+  ref={audioRef}
+  src={track.url}
+  autoPlay
+  onTimeUpdate={handleTimeUpdate}
+  onEnded={() => change(1)}
+/>
 
       </div>
 

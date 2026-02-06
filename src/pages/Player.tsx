@@ -38,6 +38,16 @@ export default function Player() {
   useEffect(() => {
     loadAll();
   }, []);
+  function playNext() {
+  if (!tracks.length || !current) return;
+
+  const i = tracks.findIndex(x => x.id === current.id);
+
+  let next = i + 1;
+  if (next >= tracks.length) next = 0;
+
+  setCurrent(tracks[next]);
+}
 
   async function loadAll() {
     const result = await getTracks(1);
@@ -191,6 +201,7 @@ export default function Player() {
             controls
             autoPlay
             src={current.url}
+              onEnded={() => playNext()}
           />
         </div>
       )}
