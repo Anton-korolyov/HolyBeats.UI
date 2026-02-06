@@ -221,27 +221,19 @@ h1, h2, h3 {
 
 /* ===== RESPONSIVE ===== */
 
-@media (max-width: 600px) {
 
-  .title {
-    font-size: 30px;
-  }
 
-  .cover {
-    height: 150px;
-  }
-
-}
 /* ============================= */
 /* 📱 MOBILE UX IMPROVEMENTS */
 /* ============================= */
+
 
 @media (max-width: 768px) {
 
   /* page padding */
   .player {
-    padding: 16px;
-    padding-bottom: 90px; /* место под плеер */
+    padding: 14px;
+    padding-bottom: 130px; /* место под мини-плеер */
   }
 
   /* title */
@@ -286,14 +278,14 @@ h1, h2, h3 {
     width: 100%;
   }
 
-  /* sticky audio */
+  /* sticky mini-player */
   .audio {
     position: fixed;
     bottom: 0;
     left: 0;
-    margin: 0;
+    right: 0;
 
-    background: rgba(10,12,20,.85);
+    background: rgba(10,12,20,.9);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
 
@@ -301,6 +293,7 @@ h1, h2, h3 {
     padding: 10px 12px;
     z-index: 999;
   }
+
 }
 
 /* ============================= */
