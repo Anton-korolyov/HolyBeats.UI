@@ -93,8 +93,9 @@
   height: 260px;
   border-radius: 26px;
 
-  background:
-    linear-gradient(135deg, rgba(140,120,255,.9), rgba(255,120,200,.9));
+ background:
+    linear-gradient(135deg, rgba(140,120,255,0.35), rgba(255,120,200,0.35)),
+    url("/covers/default.png");
 
   margin-bottom: 26px;
 }
