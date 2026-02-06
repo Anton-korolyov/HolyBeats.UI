@@ -130,7 +130,7 @@ body {
 @media (max-width: 360px) {
 
   .topbar-left {
-    visibility: hidden;
+   display: none;
   }
 
   .topbar button {
