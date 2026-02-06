@@ -1,87 +1,261 @@
-.fp-overlay {
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(900px 600px at top,
-      rgba(140,120,255,.2),
-      transparent 60%),
-    linear-gradient(180deg,#070a12,#0c1022);
+/* ===================================== */
+/* 🎵 PLAYLIST TRACK CARD */
+/* ===================================== */
+
+.card-playlist {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border-radius: 16px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 9999;
+  justify-content: space-between;
+  gap: 12px;
+
+  transition: transform .25s,
+              box-shadow .25s,
+              border .25s;
 }
 
-.fp-container {
-  width: 100%;
-  max-width: 420px;
-  padding: 26px;
+.card-playlist:hover {
+  transform: translateY(-2px);
+  border-color: rgba(140,120,255,.6);
+  box-shadow: 0 10px 30px rgba(0,0,0,.45);
+}
+
+/* title */
+
+.track-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255,255,255,.92);
+
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===================================== */
+/* 🔘 ACTION BUTTONS */
+/* ===================================== */
+
+.card-playlist .actions {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 22px;
+  gap: 8px;
 }
 
-.fp-close {
-  position: absolute;
-  top: 18px;
-  left: 18px;
-  background: none;
-  border: none;
-  font-size: 28px;
+.card-playlist button {
+  background: transparent;
+  color: rgba(255,255,255,.85);
+  border: 1px solid rgba(255,255,255,.18);
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+
+  transition: background .25s,
+              color .25s,
+              border .25s,
+              transform .2s;
+}
+
+.card-playlist button:hover {
+  background: rgba(140,120,255,.15);
   color: white;
+  border-color: rgba(140,120,255,.6);
+  transform: translateY(-1px);
 }
 
-.fp-cover {
-  width: 260px;
-  height: 260px;
-  border-radius: 26px;
-  background: linear-gradient(135deg,#8f7bff,#ff7ad9);
-  box-shadow: 0 25px 60px rgba(0,0,0,.6);
+/* play */
+
+.card-playlist button:first-child {
+  border-color: rgba(140,120,255,.6);
+  color: rgba(160,140,255,1);
 }
 
-.fp-title {
-  font-size: 22px;
-  text-align: center;
+.card-playlist button:first-child:hover {
+  background: rgba(140,120,255,.22);
 }
 
-.fp-progress {
+/* delete */
+
+.card-playlist button:last-child {
+  border-color: rgba(255,90,90,.5);
+  color: rgba(255,90,90,.9);
+}
+
+.card-playlist button:last-child:hover {
+  background: rgba(255,90,90,.15);
+  border-color: rgba(255,90,90,.9);
+}
+
+/* ===================================== */
+/* 🎧 AUDIO PLAYER BAR */
+/* ===================================== */
+
+.audio {
   width: 100%;
-  accent-color: #9b87ff;
+  margin-top: 22px;
 }
 
-.fp-controls {
-  display: flex;
-  gap: 40px;
+/* ===================================== */
+/* 📱 MOBILE UX */
+/* ===================================== */
+
+@media (max-width: 768px) {
+
+  /* reserve space for player */
+  .player {
+    padding: 16px;
+    padding-bottom: 120px;
+  }
+
+  /* fixed player */
+  .audio {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: env(safe-area-inset-bottom);
+
+    height: 72px;
+    display: flex;
+    align-items: center;
+
+    padding: 10px 14px;
+
+    background: rgba(10,12,25,.96);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border-top: 1px solid rgba(255,255,255,.15);
+    border-radius: 18px 18px 0 0;
+
+    z-index: 1000;
+  }
+
+  /* playlist card */
+
+  .card-playlist {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .track-title {
+    font-size: 14px;
+    white-space: normal;
+  }
+
+  .card-playlist .actions {
+    justify-content: space-between;
+  }
+
+  .card-playlist button {
+    flex: 1;
+    padding: 12px;
+    font-size: 13px;
+  }
+
 }
 
-.fp-controls button {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255,255,255,.08);
-  color: white;
-  font-size: 26px;
+/* ===================================== */
+/* 🚫 DISABLE HOVER ON TOUCH */
+/* ===================================== */
+
+@media (hover: none) {
+
+  .card-playlist:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .card-playlist button:hover {
+    background: transparent;
+  }
+
 }
-/* === FORCE CLOSE BUTTON CENTER FIX === */
+/* ===================================== */
+/* 🎧 FULL PLAYER USING .audio CLASS */
+/* ===================================== */
 
-.fp-close-center {
-  width: 44px !important;
-  height: 44px !important;
-  border-radius: 50% !important;
-
-  background: rgba(255,255,255,0.12) !important;
-  border: none !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  color: white !important;
-  font-size: 22px !important;
-  cursor: pointer !important;
-
-  margin-bottom: 14px !important;
+.audio {
+  width: 100%;
+  margin-top: 22px;
 }
 
+/* ---------- MOBILE FULL PLAYER ---------- */
+
+@media (max-width: 768px) {
+
+  /* reserve space */
+  .player {
+    padding-bottom: 130px;
+  }
+
+  .audio {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: env(safe-area-inset-bottom);
+
+    height: 82px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 10px 14px;
+
+    background: rgba(10,12,25,0.97);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border-top: 1px solid rgba(255,255,255,0.15);
+    border-radius: 18px 18px 0 0;
+
+    z-index: 2000;
+    box-shadow: 0 -6px 30px rgba(0,0,0,.6);
+  }
+
+  /* make native controls nicer */
+
+  .audio::-webkit-media-controls-panel {
+    background: transparent;
+  }
+
+  .audio::-webkit-media-controls-play-button,
+  .audio::-webkit-media-controls-pause-button {
+    filter: brightness(1.3);
+  }
+
+  .audio::-webkit-media-controls-current-time-display,
+  .audio::-webkit-media-controls-time-remaining-display {
+    color: white;
+  }
+
+}
+
+/* ---------- DESKTOP ---------- */
+
+@media (min-width: 769px) {
+
+  .audio {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+}
+
+/* ---------- NO HORIZONTAL SCROLL ---------- */
+
+body {
+  overflow-x: hidden;
+}
