@@ -140,7 +140,8 @@ export default function Player() {
 
               {/* PLAY -> MINI PLAYER */}
               <button
-                onClick={() => {
+                onClick={(e) => {
+                   e.stopPropagation(); 
                   setCurrent(t);
                   setShowFullPlayer(false);
                 }}
