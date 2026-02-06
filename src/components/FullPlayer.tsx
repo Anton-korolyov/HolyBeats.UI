@@ -92,9 +92,15 @@ export default function FullPlayer({
 
         {/* CLOSE ONLY IN FULL */}
         {!mini && (
-          <button className="fp-close-center" onClick={onClose}>
-            ⌄
-          </button>
+         <button
+  className="fp-close-center"
+  onClick={(e) => {
+    e.stopPropagation();
+    onClose();
+  }}
+>
+  ⌄
+</button>
         )}
 
         {/* COVER */}
