@@ -51,7 +51,8 @@ body {
 .topbar-left {
   position: absolute;     /* 👈 вырываем из потока */
   left: 16px;
-  top: 22px;             /* 👈 вылезает вверх */
+  top: 16px;      
+       /* 👈 вылезает вверх */
   z-index: 3000;
 
   flex-shrink: 0;
@@ -76,7 +77,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-
+  margin-left: 15px;
   flex: 1;
   min-width: 0;
 
