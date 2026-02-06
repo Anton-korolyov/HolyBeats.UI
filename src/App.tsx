@@ -5,7 +5,7 @@ import Playlists from "./pages/Playlists";
 import Favorites from "./pages/Favorites";
 import LoginModal from "./components/LoginModal";
 
-import "./app.css";
+import "./App.css";
 
 export default function App() {
 
