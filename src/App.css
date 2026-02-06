@@ -35,7 +35,7 @@ body {
   width: 100%;
   min-width: 0;
 
-  padding: 12px 12px;
+  padding: 12px 12px 12px 90px; /* 👈 место под логотип */
 
   background: rgba(10,12,25,0.85);
   backdrop-filter: blur(18px);
@@ -44,16 +44,33 @@ body {
   border-bottom: 1px solid rgba(255,255,255,0.12);
 }
 
-/* LOGO */
+/* ===================================== */
+/* 🟣 LOGO */
+/* ===================================== */
 
 .topbar-left {
+  position: absolute;     /* 👈 вырываем из потока */
+  left: 16px;
+  top: -22px;             /* 👈 вылезает вверх */
+  z-index: 3000;
+
   flex-shrink: 0;
-  font-size: 18px;
-  font-weight: 600;
   white-space: nowrap;
 }
 
+.topbar-left img {
+  height: 72px;
+  width: 72px;
+  object-fit: contain;
+  border-radius: 50%;
+  display: block;
+
+  box-shadow: 0 0 25px rgba(140,120,255,0.65);
+}
+
+/* ===================================== */
 /* BUTTONS CONTAINER */
+/* ===================================== */
 
 .topbar-buttons {
   display: flex;
@@ -74,7 +91,9 @@ body {
   display: none;
 }
 
+/* ===================================== */
 /* BUTTON */
+/* ===================================== */
 
 .topbar button {
   flex-shrink: 0;
@@ -124,13 +143,36 @@ body {
 }
 
 /* ===================================== */
-/* 📱 EXTRA SMALL PHONES */
+/* 📱 MOBILE */
 /* ===================================== */
+
+@media screen and (max-width: 600px) {
+
+  .topbar {
+    padding-left: 70px;
+  }
+
+  .topbar-left {
+    top: -14px;
+  }
+
+  .topbar-left img {
+    height: 56px;
+    width: 56px;
+  }
+
+}
+
+/* EXTRA SMALL PHONES */
 
 @media screen and (max-width: 360px) {
 
   .topbar-left {
     display: none !important;
+  }
+
+  .topbar {
+    padding-left: 12px;
   }
 
   .topbar button {
@@ -140,6 +182,7 @@ body {
 
 }
 
+/* IOS SAFARI FIX */
 
 @supports (-webkit-touch-callout: none) {
 
@@ -147,10 +190,4 @@ body {
     display: none;
   }
 
-}
-
-.topbar-left img {
-  height: 50px;
-  width: auto;
-  display: block;
 }
