@@ -33,7 +33,7 @@ export default function App() {
       <div className="topbar">
 
         <div className="topbar-left">
-          🎵 HolyBeats
+          <img src="/logo.png" alt="HolyBeats" />
         </div>
 
         <div className="topbar-buttons">
