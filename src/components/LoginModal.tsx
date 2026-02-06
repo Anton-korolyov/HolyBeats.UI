@@ -10,7 +10,7 @@ type Props = {
 export default function LoginModal({ onClose, onSuccess }: Props) {
 
   const [mode, setMode] = useState<"login" | "register">("login");
-
+  const API = import.meta.env.VITE_API_URL;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -35,7 +35,7 @@ async function handleRegister() {
   }
 
   try {
-    const r = await fetch("https://localhost:7075/api/auth/register", {
+    const r = await fetch(`${API}/api/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
