@@ -188,10 +188,15 @@ export default function Player() {
           playlist={tracks}
           onChangeTrack={setCurrent}
           mini={!showFullPlayer}
-          onClose={() => {
-            setShowFullPlayer(false);
-            setCurrent(null);
-          }}
+         onClose={() => {
+  if (showFullPlayer) {
+    // full -> mini
+    setShowFullPlayer(false);
+  } else {
+    // mini -> close
+    setCurrent(null);
+  }
+}}
         />
       )}
 
