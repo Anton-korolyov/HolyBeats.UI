@@ -1,7 +1,7 @@
 import "./fullPlayer.css";
 import type { Track } from "../api/api";
 import { useRef, useState, useEffect } from "react";
-
+import "./fullPlayer.css";
 type Props = {
   track: Track;
   playlist?: Track[];
