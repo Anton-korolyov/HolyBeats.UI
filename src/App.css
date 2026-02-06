@@ -127,7 +127,7 @@ body {
 /* 📱 EXTRA SMALL PHONES */
 /* ===================================== */
 
-@media (max-width: 360px) {
+@media (max-width: 768) {
 
   .topbar-left {
    display: none;
