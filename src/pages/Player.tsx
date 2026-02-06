@@ -19,11 +19,10 @@ function isLoggedIn() {
 
 export default function Player() {
 
-  // tracks
+  // ===== DATA =====
   const [tracks, setTracks] = useState<Track[]>([]);
   const [current, setCurrent] = useState<Track | null>(null);
 
-  // playlists
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [selectedPlaylistId, setSelectedPlaylistId] =
     useState<number | null>(null);
@@ -31,10 +30,11 @@ export default function Player() {
   const [_playlistTracks, setPlaylistTracks] = useState<Track[]>([]);
   const [newPlaylist, setNewPlaylist] = useState("");
 
-  // ui
+  // ===== UI =====
   const [showLogin, setShowLogin] = useState(false);
   const [showFullPlayer, setShowFullPlayer] = useState(false);
 
+  // ===== LOAD =====
   useEffect(() => {
     loadAll();
   }, []);
@@ -48,6 +48,7 @@ export default function Player() {
     }
   }
 
+  // ===== PLAYLIST =====
   async function handleSelectPlaylist(p: Playlist) {
     setSelectedPlaylistId(p.id);
     const list = await getPlaylistTracks(p.id);
@@ -76,6 +77,10 @@ export default function Player() {
     await addTrackToPlaylist(selectedPlaylistId, trackId);
     alert("Added to playlist");
   }
+
+  // ===============================
+  // ✅ RENDER
+  // ===============================
 
   return (
     <div className="player">
@@ -138,10 +143,10 @@ export default function Player() {
 
             <div className="actions">
 
-              {/* PLAY -> MINI PLAYER */}
+              {/* PLAY -> MINI */}
               <button
                 onClick={(e) => {
-                   e.stopPropagation(); 
+                  e.stopPropagation();
                   setCurrent(t);
                   setShowFullPlayer(false);
                 }}
@@ -149,6 +154,7 @@ export default function Player() {
                 ▶
               </button>
 
+              {/* FAVORITE */}
               <button
                 onClick={() => {
                   if (!isLoggedIn()) {
@@ -156,12 +162,13 @@ export default function Player() {
                     return;
                   }
                   addFavorite(t.id);
-                  alert("Добавлено в избранное ❤️");
+                  alert("Added to favorites ❤️");
                 }}
               >
                 ❤️
               </button>
 
+              {/* ADD TO PLAYLIST */}
               <button
                 onClick={() => handleAddToPlaylist(t.id)}
               >
@@ -174,20 +181,17 @@ export default function Player() {
         ))}
       </div>
 
-      {/* FULL PLAYER (ALWAYS WHEN TRACK EXISTS) */}
+      {/* PLAYER (MINI OR FULL) */}
       {current && (
         <FullPlayer
           track={current}
           playlist={tracks}
           onChangeTrack={setCurrent}
-          onClose={() => {
-  if (showFullPlayer) {
-    setShowFullPlayer(false); // свернуть в мини
-  } else {
-    setCurrent(null); // закрыть полностью
-  }
-}}
           mini={!showFullPlayer}
+          onClose={() => {
+            setShowFullPlayer(false);
+            setCurrent(null);
+          }}
         />
       )}
 
