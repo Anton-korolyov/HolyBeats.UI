@@ -180,7 +180,13 @@ export default function Player() {
           track={current}
           playlist={tracks}
           onChangeTrack={setCurrent}
-          onClose={() => setShowFullPlayer(false)}
+          onClose={() => {
+  if (showFullPlayer) {
+    setShowFullPlayer(false); // свернуть в мини
+  } else {
+    setCurrent(null); // закрыть полностью
+  }
+}}
           mini={!showFullPlayer}
         />
       )}
