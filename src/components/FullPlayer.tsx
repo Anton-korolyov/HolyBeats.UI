@@ -7,7 +7,7 @@ type Props = {
   playlist?: Track[];
   onClose: () => void;
   onChangeTrack?: (t: Track) => void;
-  mini?: boolean; // 👈 ВАЖНО
+  mini?: boolean;
 };
 
 export default function FullPlayer({
@@ -24,7 +24,10 @@ export default function FullPlayer({
   const [duration, setDuration] = useState(0);
   const [playing, setPlaying] = useState(true);
 
-  // ▶ when track changes -> autoplay
+  /* ================================
+     AUTOPLAY ON TRACK CHANGE
+  ================================= */
+
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.load();
@@ -33,20 +36,29 @@ export default function FullPlayer({
     }
   }, [track]);
 
-  // ⏱ progress update
+  /* ================================
+     TIME UPDATE
+  ================================= */
+
   function handleTimeUpdate() {
     if (!audioRef.current) return;
     setProgress(audioRef.current.currentTime);
     setDuration(audioRef.current.duration || 0);
   }
 
-  // 🎚 seek
+  /* ================================
+     SEEK
+  ================================= */
+
   function handleSeek(e: React.ChangeEvent<HTMLInputElement>) {
     if (!audioRef.current) return;
     audioRef.current.currentTime = Number(e.target.value);
   }
 
-  // ▶⏸ play pause
+  /* ================================
+     PLAY / PAUSE
+  ================================= */
+
   function togglePlay() {
     if (!audioRef.current) return;
 
@@ -59,7 +71,10 @@ export default function FullPlayer({
     }
   }
 
-  // ⏮⏭ next / prev
+  /* ================================
+     NEXT / PREV
+  ================================= */
+
   function change(offset: number) {
     if (!playlist.length || !onChangeTrack) return;
 
@@ -68,7 +83,10 @@ export default function FullPlayer({
     if (next) onChangeTrack(next);
   }
 
-  // 👆 SWIPE
+  /* ================================
+     SWIPE
+  ================================= */
+
   let startX = 0;
 
   function onTouchStart(e: React.TouchEvent) {
@@ -81,26 +99,34 @@ export default function FullPlayer({
     if (dx < -80) change(1);
   }
 
+  /* ================================
+     RENDER
+  ================================= */
+
   return (
+
+    /* BACKDROP */
     <div
       className={`fp-overlay ${mini ? "mini" : "full"}`}
+      onClick={onClose}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
 
-      <div className="fp-container">
+      {/* CONTAINER */}
+      <div
+        className="fp-container"
+        onClick={(e) => e.stopPropagation()}
+      >
 
-        {/* CLOSE ONLY IN FULL */}
+        {/* CLOSE */}
         {!mini && (
-         <button
-  className="fp-close-center"
-  onClick={(e) => {
-    e.stopPropagation();
-    onClose();
-  }}
->
-  ⌄
-</button>
+          <button
+            className="fp-close-center"
+            onClick={onClose}
+          >
+            ⌄
+          </button>
         )}
 
         {/* COVER */}
@@ -121,16 +147,22 @@ export default function FullPlayer({
 
         {/* CONTROLS */}
         <div className="fp-controls">
-          {!mini && <button onClick={() => change(-1)}>⏮</button>}
+
+          {!mini && (
+            <button onClick={() => change(-1)}>⏮</button>
+          )}
 
           <button onClick={togglePlay}>
             {playing ? "⏸" : "▶"}
           </button>
 
-          {!mini && <button onClick={() => change(1)}>⏭</button>}
+          {!mini && (
+            <button onClick={() => change(1)}>⏭</button>
+          )}
+
         </div>
 
-        {/* AUDIO (ONLY ONE) */}
+        {/* SINGLE AUDIO */}
         <audio
           ref={audioRef}
           onTimeUpdate={handleTimeUpdate}
