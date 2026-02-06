@@ -7,13 +7,15 @@ type Props = {
   playlist?: Track[];
   onClose: () => void;
   onChangeTrack?: (t: Track) => void;
+  mini?: boolean; // 👈 ВАЖНО
 };
 
 export default function FullPlayer({
   track,
   playlist = [],
   onClose,
-  onChangeTrack
+  onChangeTrack,
+  mini = false
 }: Props) {
 
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -22,28 +24,29 @@ export default function FullPlayer({
   const [duration, setDuration] = useState(0);
   const [playing, setPlaying] = useState(true);
 
-  // ===== when track changes -> play =====
+  // ▶ when track changes -> autoplay
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.load();
       audioRef.current.play();
+      setPlaying(true);
     }
   }, [track]);
 
-  // ===== AUDIO UPDATE =====
+  // ⏱ progress update
   function handleTimeUpdate() {
     if (!audioRef.current) return;
     setProgress(audioRef.current.currentTime);
     setDuration(audioRef.current.duration || 0);
   }
 
-  // ===== SEEK =====
+  // 🎚 seek
   function handleSeek(e: React.ChangeEvent<HTMLInputElement>) {
     if (!audioRef.current) return;
     audioRef.current.currentTime = Number(e.target.value);
   }
 
-  // ===== PLAY / PAUSE =====
+  // ▶⏸ play pause
   function togglePlay() {
     if (!audioRef.current) return;
 
@@ -56,7 +59,7 @@ export default function FullPlayer({
     }
   }
 
-  // ===== NEXT / PREV =====
+  // ⏮⏭ next / prev
   function change(offset: number) {
     if (!playlist.length || !onChangeTrack) return;
 
@@ -65,7 +68,7 @@ export default function FullPlayer({
     if (next) onChangeTrack(next);
   }
 
-  // ===== SWIPE =====
+  // 👆 SWIPE
   let startX = 0;
 
   function onTouchStart(e: React.TouchEvent) {
@@ -80,20 +83,22 @@ export default function FullPlayer({
 
   return (
     <div
-      className="fp-overlay"
+      className={`fp-overlay ${mini ? "mini" : "full"}`}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
 
       <div className="fp-container">
 
-        {/* CLOSE */}
-        <button className="fp-close-center" onClick={onClose}>
-          ⌄
-        </button>
+        {/* CLOSE ONLY IN FULL */}
+        {!mini && (
+          <button className="fp-close-center" onClick={onClose}>
+            ⌄
+          </button>
+        )}
 
         {/* COVER */}
-        <div className="fp-cover" />
+        {!mini && <div className="fp-cover" />}
 
         {/* TITLE */}
         <h2 className="fp-title">{track.title}</h2>
@@ -110,21 +115,18 @@ export default function FullPlayer({
 
         {/* CONTROLS */}
         <div className="fp-controls">
-
-          <button onClick={() => change(-1)}>⏮</button>
+          {!mini && <button onClick={() => change(-1)}>⏮</button>}
 
           <button onClick={togglePlay}>
             {playing ? "⏸" : "▶"}
           </button>
 
-          <button onClick={() => change(1)}>⏭</button>
-
+          {!mini && <button onClick={() => change(1)}>⏭</button>}
         </div>
 
-        {/* AUDIO */}
+        {/* AUDIO (ONLY ONE) */}
         <audio
           ref={audioRef}
-          autoPlay
           onTimeUpdate={handleTimeUpdate}
           src={track.url}
         />

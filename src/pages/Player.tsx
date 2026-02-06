@@ -35,7 +35,6 @@ export default function Player() {
   const [showLogin, setShowLogin] = useState(false);
   const [showFullPlayer, setShowFullPlayer] = useState(false);
 
-  // load
   useEffect(() => {
     loadAll();
   }, []);
@@ -49,14 +48,12 @@ export default function Player() {
     }
   }
 
-  // select playlist
   async function handleSelectPlaylist(p: Playlist) {
     setSelectedPlaylistId(p.id);
     const list = await getPlaylistTracks(p.id);
     setPlaylistTracks(list);
   }
 
-  // create playlist
   async function handleCreatePlaylist() {
     if (!newPlaylist.trim()) return;
 
@@ -65,7 +62,6 @@ export default function Player() {
     setPlaylists(await getPlaylists());
   }
 
-  // add track to playlist
   async function handleAddToPlaylist(trackId: number) {
     if (!isLoggedIn()) {
       setShowLogin(true);
@@ -127,6 +123,7 @@ export default function Player() {
         {tracks.map(t => (
           <div className="card" key={t.id}>
 
+            {/* OPEN FULL PLAYER */}
             <div
               className="cover"
               onClick={() => {
@@ -141,9 +138,11 @@ export default function Player() {
 
             <div className="actions">
 
+              {/* PLAY -> MINI PLAYER */}
               <button
                 onClick={() => {
                   setCurrent(t);
+                  setShowFullPlayer(false);
                 }}
               >
                 ▶
@@ -174,30 +173,14 @@ export default function Player() {
         ))}
       </div>
 
-      {/* MINI PLAYER */}
+      {/* FULL PLAYER (ALWAYS WHEN TRACK EXISTS) */}
       {current && (
-        <div
-          className="mini-player"
-          onClick={() => setShowFullPlayer(true)}
-        >
-          <span>{current.title}</span>
-
-          <audio
-            className="audio"
-            controls
-            autoPlay
-            src={current.url}
-          />
-        </div>
-      )}
-
-      {/* FULL PLAYER */}
-      {showFullPlayer && current && (
         <FullPlayer
           track={current}
           playlist={tracks}
           onChangeTrack={setCurrent}
           onClose={() => setShowFullPlayer(false)}
+          mini={!showFullPlayer}
         />
       )}
 
