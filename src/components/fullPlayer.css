@@ -217,3 +217,28 @@
   pointer-events: auto !important;
   height: 70px;        /* 👈 ДОБАВЬ ЭТУ СТРОКУ */
 }
+/* === HARD FIX MINI PLAYER === */
+
+.fp-overlay.mini {
+  display: none !important;   /* 👈 overlay исчезает */
+}
+
+/* мини-плеер живёт сам по себе */
+.fp-overlay.mini + .fp-container,
+.fp-container.mini {
+  position: fixed;
+  bottom: env(safe-area-inset-bottom);
+  left: 0;
+  right: 0;
+
+  height: 80px;
+  background: rgba(10,12,25,.97);
+  backdrop-filter: blur(18px);
+  border-top: 1px solid rgba(255,255,255,.15);
+  z-index: 6000;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+}
