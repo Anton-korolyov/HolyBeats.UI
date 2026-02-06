@@ -127,15 +127,24 @@ body {
 /* 📱 EXTRA SMALL PHONES */
 /* ===================================== */
 
-@media (max-width: 768) {
+@media screen and (max-width: 360px) {
 
   .topbar-left {
-   display: none;
+    display: none !important;
   }
 
   .topbar button {
-    font-size: 12px;
-    padding: 8px 10px;
+    font-size: 12px !important;
+    padding: 8px 10px !important;
+  }
+
+}
+
+
+@supports (-webkit-touch-callout: none) {
+
+  .topbar-left {
+    display: none;
   }
 
 }
