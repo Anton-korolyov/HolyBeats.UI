@@ -111,8 +111,8 @@ h1, h2, h3 {
 
 .tracks {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 22px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
   margin-bottom: 40px;
 }
 
@@ -123,7 +123,7 @@ h1, h2, h3 {
   border-radius: 20px;
   padding: 16px;
   border: 1px solid rgba(255,255,255,0.1);
-
+   width:100% ;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 
@@ -293,7 +293,9 @@ h1, h2, h3 {
     padding: 10px 12px;
     z-index: 999;
   }
-
+  .tracks {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* ============================= */
