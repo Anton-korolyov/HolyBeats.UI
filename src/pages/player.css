@@ -393,21 +393,7 @@ h1, h2, h3 {
 }
 
 /* PROGRESS */
-.mini-progress {
-  width: 100%;
-  height: 4px;
-  appearance: none;
-  border-radius: 10px;
-  cursor: pointer;
 
-  background: linear-gradient(
-    to right,
-    #8c78ff 0%,
-    #8c78ff var(--progress),
-    rgba(255,255,255,0.25) var(--progress),
-    rgba(255,255,255,0.25) 100%
-  );
-}
 
 /* кружок */
 .mini-progress::-webkit-slider-thumb {
