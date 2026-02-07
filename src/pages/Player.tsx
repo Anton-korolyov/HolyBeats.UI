@@ -307,18 +307,32 @@ function formatTime(sec: number) {
     </div>
 
     {/* AUDIO */}
-    <audio
-      ref={audioRef}
-      src={current.url}
-      autoPlay
-      onEnded={playNext}
-      onTimeUpdate={() =>
-        setCurrentTime(audioRef.current?.currentTime || 0)
-      }
-      onLoadedMetadata={() =>
-        setDuration(audioRef.current?.duration || 0)
-      }
-    />
+ <audio
+  ref={audioRef}
+  src={current.url}
+  autoPlay
+  onEnded={playNext}
+  onTimeUpdate={() => {
+    const a = audioRef.current;
+    if (!a) return;
+
+    setCurrentTime(a.currentTime);
+
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.setPositionState({
+        duration: a.duration || 0,
+        position: a.currentTime,
+        playbackRate: 1
+      });
+    }
+  }}
+  onLoadedMetadata={() => {
+    const a = audioRef.current;
+    if (!a) return;
+    setDuration(a.duration || 0);
+  }}
+/>
+
 
   </div>
 )}

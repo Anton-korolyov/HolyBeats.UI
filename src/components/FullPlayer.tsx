@@ -79,10 +79,22 @@ useEffect(() => {
   ================================= */
 
   function handleTimeUpdate() {
-    if (!audioRef.current) return;
-    setProgress(audioRef.current.currentTime);
-    setDuration(audioRef.current.duration || 0);
+  if (!audioRef.current) return;
+
+  const current = audioRef.current.currentTime;
+  const dur = audioRef.current.duration || 0;
+
+  setProgress(current);
+  setDuration(dur);
+
+  if ("mediaSession" in navigator) {
+    navigator.mediaSession.setPositionState({
+      duration: dur,
+      position: current,
+      playbackRate: 1
+    });
   }
+}
 
   /* ================================
      SEEK
