@@ -248,9 +248,14 @@ h1, h2, h3 {
   }
 
 }
-.mini-controls {
+.mini-player {
   display: flex;
   align-items: center;
+  gap: 16px;
+}
+
+.mini-controls {
+  display: flex;
   gap: 12px;
 }
 

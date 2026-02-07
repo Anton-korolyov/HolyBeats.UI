@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import {
   getTracks,
   addFavorite,
@@ -22,7 +22,7 @@ export default function Player() {
   // ===== DATA =====
   const [tracks, setTracks] = useState<Track[]>([]);
   const [current, setCurrent] = useState<Track | null>(null);
-
+    const audioRef = useRef<HTMLAudioElement>(null);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [selectedPlaylistId, setSelectedPlaylistId] =
     useState<number | null>(null);
@@ -203,7 +203,7 @@ function playPrev() {
       </div>
 
       {/* MINI PLAYER */}
-     {current && !showFullPlayer && (
+{current && !showFullPlayer && (
   <div className="mini-player">
 
     <span>{current.title}</span>
@@ -212,17 +212,26 @@ function playPrev() {
 
       <button onClick={playPrev}>⏮</button>
 
-      <audio
-        className="audio"
-        controls
-        autoPlay
-        src={current.url}
-        onEnded={() => playNext()}
-      />
+      <button
+        onClick={() => {
+          const a = audioRef.current;
+          if (!a) return;
+          a.paused ? a.play() : a.pause();
+        }}
+      >
+        ⏯
+      </button>
 
       <button onClick={playNext}>⏭</button>
 
     </div>
+
+    <audio
+      ref={audioRef}
+      src={current.url}
+      onEnded={playNext}
+      autoPlay
+    />
 
   </div>
 )}
