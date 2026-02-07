@@ -22,11 +22,14 @@ export default function Player() {
   // ===== DATA =====
   const [tracks, setTracks] = useState<Track[]>([]);
   const [current, setCurrent] = useState<Track | null>(null);
-    const audioRef = useRef<HTMLAudioElement>(null);
+    
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [selectedPlaylistId, setSelectedPlaylistId] =
     useState<number | null>(null);
 
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   const [_playlistTracks, setPlaylistTracks] = useState<Track[]>([]);
   const [newPlaylist, setNewPlaylist] = useState("");
 
@@ -81,7 +84,11 @@ function playPrev() {
     setNewPlaylist("");
     setPlaylists(await getPlaylists());
   }
-
+function formatTime(sec: number) {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
   async function handleAddToPlaylist(trackId: number) {
     if (!isLoggedIn()) {
       setShowLogin(true);
@@ -203,34 +210,71 @@ function playPrev() {
       </div>
 
       {/* MINI PLAYER */}
-{current && !showFullPlayer && (
+
+    {current && !showFullPlayer && (
   <div className="mini-player">
 
-    <span>{current.title}</span>
+    {/* LEFT */}
+    <div className="mini-left">
+      <div className="mini-title">
+        {current.title}
+      </div>
 
-    <div className="mini-controls">
+      <div className="mini-time">
+        {formatTime(currentTime)} / {formatTime(duration)}
+      </div>
+    </div>
 
-      <button onClick={playPrev}>⏮</button>
+    {/* CENTER */}
+    <div className="mini-center">
 
-      <button
-        onClick={() => {
-          const a = audioRef.current;
-          if (!a) return;
-          a.paused ? a.play() : a.pause();
+      <div className="mini-controls">
+
+        <button onClick={playPrev}>⏮</button>
+
+        <button
+          className="play-btn"
+          onClick={() => {
+            const a = audioRef.current;
+            if (!a) return;
+            a.paused ? a.play() : a.pause();
+          }}
+        >
+          ⏯
+        </button>
+
+        <button onClick={playNext}>⏭</button>
+
+      </div>
+
+      <input
+        type="range"
+        min={0}
+        max={duration}
+        value={currentTime}
+        onChange={(e) => {
+          const v = Number(e.target.value);
+          setCurrentTime(v);
+          if (audioRef.current)
+            audioRef.current.currentTime = v;
         }}
-      >
-        ⏯
-      </button>
-
-      <button onClick={playNext}>⏭</button>
+        className="mini-progress"
+      />
 
     </div>
 
+    {/* AUDIO */}
     <audio
       ref={audioRef}
       src={current.url}
-      onEnded={playNext}
       autoPlay
+      onEnded={playNext}
+      onTimeUpdate={() =>
+        setCurrentTime(audioRef.current?.currentTime || 0)
+      }
+      onLoadedMetadata={() =>
+        setDuration(audioRef.current?.duration || 0)
+      }
     />
 
   </div>
