@@ -247,19 +247,23 @@ function formatTime(sec: number) {
 
       </div>
 
-      <input
-        type="range"
-        min={0}
-        max={duration}
-        value={currentTime}
-        onChange={(e) => {
-          const v = Number(e.target.value);
-          setCurrentTime(v);
-          if (audioRef.current)
-            audioRef.current.currentTime = v;
-        }}
-        className="mini-progress"
-      />
+     <input
+  type="range"
+  min={0}
+  max={duration}
+  value={currentTime}
+  onChange={(e) => {
+    const v = Number(e.target.value);
+    setCurrentTime(v);
+    if (audioRef.current)
+      audioRef.current.currentTime = v;
+  }}
+  className="mini-progress"
+  style={{
+    ["--progress" as any]:
+      duration ? `${(currentTime / duration) * 100}%` : "0%"
+  }}
+/>
 
     </div>
 
