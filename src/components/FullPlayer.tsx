@@ -32,7 +32,11 @@ export default function FullPlayer({
     if (audioRef.current) {
       audioRef.current.load();
       audioRef.current.play();
+      
       setPlaying(true);
+       if ("mediaSession" in navigator) {
+      navigator.mediaSession.playbackState = "playing";
+    }
     }
   }, [track]);
 
@@ -78,23 +82,34 @@ useEffect(() => {
      TIME UPDATE
   ================================= */
 
-  function handleTimeUpdate() {
-  if (!audioRef.current) return;
+ function handleTimeUpdate() {
+  const a = audioRef.current;
+  if (!a) return;
 
-  const current = audioRef.current.currentTime;
-  const dur = audioRef.current.duration || 0;
+  const current = a.currentTime;
+  const dur = a.duration;
 
   setProgress(current);
-  setDuration(dur);
+  setDuration(dur || 0);
 
-  if ("mediaSession" in navigator) {
-    navigator.mediaSession.setPositionState({
-      duration: dur,
-      position: current,
-      playbackRate: 1
-    });
+  // ❗ ВАЖНО: обновляем ТОЛЬКО если есть нормальная длительность
+  if (
+    "mediaSession" in navigator &&
+    typeof dur === "number" &&
+    isFinite(dur) &&
+    dur > 1
+  ) {
+    try {
+      navigator.mediaSession.setPositionState({
+        duration: dur,
+        position: current,
+        playbackRate: 1
+      });
+    } catch {}
   }
 }
+
+  
 
   /* ================================
      SEEK
@@ -109,17 +124,29 @@ useEffect(() => {
      PLAY / PAUSE
   ================================= */
 
-  function togglePlay() {
-    if (!audioRef.current) return;
+ function togglePlay() {
+  if (!audioRef.current) return;
 
-    if (audioRef.current.paused) {
-      audioRef.current.play();
-      setPlaying(true);
-    } else {
-      audioRef.current.pause();
-      setPlaying(false);
+  if (audioRef.current.paused) {
+    audioRef.current.play();
+    setPlaying(true);
+
+    // 👇 ДОБАВИЛИ
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.playbackState = "playing";
+    }
+
+  } else {
+    audioRef.current.pause();
+    setPlaying(false);
+
+    // 👇 ДОБАВИЛИ
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.playbackState = "paused";
     }
   }
+}
+
 
   /* ================================
      NEXT / PREV
