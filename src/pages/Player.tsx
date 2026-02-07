@@ -18,6 +18,8 @@ function isLoggedIn() {
 }
 
 export default function Player() {
+const [genreFilter, setGenreFilter] = useState<string>("all");
+const [langFilter, setLangFilter] = useState<string>("all");
 
   // ===== DATA =====
   const [tracks, setTracks] = useState<Track[]>([]);
@@ -33,10 +35,15 @@ export default function Player() {
   const [_playlistTracks, setPlaylistTracks] = useState<Track[]>([]);
   const [newPlaylist, setNewPlaylist] = useState("");
 
+const genres = ["all", ...new Set(tracks.map(t => t.genre))];
+const languages = ["all", ...new Set(tracks.map(t => t.language))];
   // ===== UI =====
   const [showLogin, setShowLogin] = useState(false);
   const [showFullPlayer, setShowFullPlayer] = useState(false);
-
+const filteredTracks = tracks.filter(t =>
+  (genreFilter === "all" || t.genre === genreFilter) &&
+  (langFilter === "all" || t.language === langFilter)
+);
   // ===== LOAD =====
   useEffect(() => {
     loadAll();
@@ -187,10 +194,35 @@ function formatTime(sec: number) {
       )}
 
       {/* TRACKS */}
+
+<div className="filters">
+
+  <select
+    value={genreFilter}
+    onChange={e => setGenreFilter(e.target.value)}
+  >
+    {genres.map(g => (
+      <option key={g} value={g}>{g}</option>
+    ))}
+  </select>
+
+  <select
+    value={langFilter}
+    onChange={e => setLangFilter(e.target.value)}
+  >
+    {languages.map(l => (
+      <option key={l} value={l}>{l}</option>
+    ))}
+  </select>
+
+</div>
+
+
       <h2>All Tracks</h2>
 
       <div className="tracks">
-        {tracks.map(t => (
+       {filteredTracks.map(t => (
+
           <div className="card" key={t.id}>
 
             {/* OPEN FULL PLAYER */}
