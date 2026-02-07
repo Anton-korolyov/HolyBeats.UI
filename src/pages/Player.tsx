@@ -288,7 +288,7 @@ function formatTime(sec: number) {
 
       </div>
 
-<input
+     <input
   type="range"
   min={0}
   max={duration}
@@ -300,8 +300,11 @@ function formatTime(sec: number) {
       audioRef.current.currentTime = v;
   }}
   className="mini-progress"
+  style={{
+    ["--progress" as any]:
+      duration ? `${(currentTime / duration) * 100}%` : "0%"
+  }}
 />
-
 
     </div>
 
