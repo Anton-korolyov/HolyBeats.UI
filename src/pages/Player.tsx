@@ -70,6 +70,45 @@ function playPrev() {
     }
   }
 
+
+/* ================================
+   MEDIA SESSION (PLAYER)
+================================ */
+
+useEffect(() => {
+  if (!current) return;
+  if (!("mediaSession" in navigator)) return;
+
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: current.title,
+    artist: "Holy Beats",
+    artwork: [
+      { src: "/logo.png", sizes: "96x96", type: "image/png" },
+      { src: "/logo.png", sizes: "192x192", type: "image/png" },
+      { src: "/logo.png", sizes: "512x512", type: "image/png" }
+    ]
+  });
+
+  navigator.mediaSession.setActionHandler("play", () => {
+    audioRef.current?.play();
+  });
+
+  navigator.mediaSession.setActionHandler("pause", () => {
+    audioRef.current?.pause();
+  });
+
+  navigator.mediaSession.setActionHandler("previoustrack", () => {
+    playPrev();
+  });
+
+  navigator.mediaSession.setActionHandler("nexttrack", () => {
+    playNext();
+  });
+
+}, [current]);
+
+
+  
   // ===== PLAYLIST =====
   async function handleSelectPlaylist(p: Playlist) {
     setSelectedPlaylistId(p.id);
