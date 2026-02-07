@@ -42,7 +42,10 @@ export async function login(
 export type Track = {
   id: number;
   title: string;
-  url: string;   // 🔥 MP3 URL from R2
+  url: string;
+  duration: number;
+  genre: string;
+  language: string;
 };
 
 export type Playlist = {
