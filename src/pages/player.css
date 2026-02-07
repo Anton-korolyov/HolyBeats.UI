@@ -248,3 +248,22 @@ h1, h2, h3 {
   }
 
 }
+.mini-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mini-controls button {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  font-size: 18px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.mini-controls button:hover {
+  background: rgba(140,120,255,0.4);
+}

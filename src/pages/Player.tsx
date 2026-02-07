@@ -48,7 +48,16 @@ export default function Player() {
 
   setCurrent(tracks[next]);
 }
+function playPrev() {
+  if (!tracks.length || !current) return;
 
+  const i = tracks.findIndex(x => x.id === current.id);
+
+  let prev = i - 1;
+  if (prev < 0) prev = tracks.length - 1;
+
+  setCurrent(tracks[prev]);
+}
   async function loadAll() {
     const result = await getTracks(1);
     setTracks(result.items);
@@ -194,19 +203,30 @@ export default function Player() {
       </div>
 
       {/* MINI PLAYER */}
-      {current && !showFullPlayer && (
-        <div className="mini-player">
-          <span>{current.title}</span>
+     {current && !showFullPlayer && (
+  <div className="mini-player">
 
-          <audio
-            className="audio"
-            controls
-            autoPlay
-            src={current.url}
-              onEnded={() => playNext()}
-          />
-        </div>
-      )}
+    <span>{current.title}</span>
+
+    <div className="mini-controls">
+
+      <button onClick={playPrev}>⏮</button>
+
+      <audio
+        className="audio"
+        controls
+        autoPlay
+        src={current.url}
+        onEnded={() => playNext()}
+      />
+
+      <button onClick={playNext}>⏭</button>
+
+    </div>
+
+  </div>
+)}
+
 
       {/* FULL PLAYER */}
       {current && showFullPlayer && (
