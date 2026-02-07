@@ -145,6 +145,10 @@ h1, h2, h3 {
 .track-title {
   font-size: 15px;
   margin-bottom: 10px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ===== ACTIONS ===== */
@@ -195,8 +199,12 @@ h1, h2, h3 {
   }
 
   .track-title {
-    font-size: 14px;
-  }
+  font-size: 14px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
   .actions button {
     padding: 11px;

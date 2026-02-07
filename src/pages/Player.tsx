@@ -147,9 +147,12 @@ export default function Player() {
               }}
             />
 
-            <div className="track-title">
-              {t.title}
-            </div>
+            <div
+  className="track-title"
+  title={t.title}   // при наведении покажет полностью
+>
+  {t.title}
+</div>
 
             <div className="actions">
 
