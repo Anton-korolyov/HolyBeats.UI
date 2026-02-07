@@ -207,7 +207,9 @@ function formatTime(sec: number) {
 >
   {t.title}
             </div>
-
+<div className="track-meta">
+  🎵 {t.genre} • ⏱ {formatTime(t.duration)}
+</div>
             <div className="actions">
 
               {/* PLAY -> MINI */}
