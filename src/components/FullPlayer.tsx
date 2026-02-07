@@ -5,7 +5,7 @@ import { useRef, useState, useEffect } from "react";
 type Props = {
   track: Track;
   playlist?: Track[];
-  onClose: () => void;           // в mini → открыть full
+  onClose: () => void;
   onChangeTrack?: (t: Track) => void;
   mini?: boolean;
 };
@@ -25,91 +25,89 @@ export default function FullPlayer({
   const [playing, setPlaying] = useState(true);
 
   /* ================================
-     AUTOPLAY
+     AUTOPLAY ON TRACK CHANGE
   ================================= */
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.load();
-      audioRef.current.play();
-      
-      setPlaying(true);
-       if ("mediaSession" in navigator) {
+    if (!audioRef.current) return;
+
+    audioRef.current.load();
+    audioRef.current.play();
+    setPlaying(true);
+
+    if ("mediaSession" in navigator) {
       navigator.mediaSession.playbackState = "playing";
-    }
     }
   }, [track]);
 
-
   /* ================================
-   MEDIA SESSION (LOCKSCREEN CONTROLS)
-================================ */
+     MEDIA SESSION
+  ================================= */
 
-useEffect(() => {
-  if (!("mediaSession" in navigator)) return;
+  useEffect(() => {
+    if (!("mediaSession" in navigator)) return;
 
-  navigator.mediaSession.metadata = new MediaMetadata({
-    title: track.title,
-    artist: "Holy Beats",
-    artwork: [
-      { src: "/logo.png", sizes: "96x96", type: "image/png" },
-      { src: "/logo.png", sizes: "192x192", type: "image/png" },
-      { src: "/logo.png", sizes: "512x512", type: "image/png" }
-    ]
-  });
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: track.title,
+      artist: "Holy Beats",
+      artwork: [
+        { src: "/logo.png", sizes: "96x96", type: "image/png" },
+        { src: "/logo.png", sizes: "192x192", type: "image/png" },
+        { src: "/logo.png", sizes: "512x512", type: "image/png" }
+      ]
+    });
 
-  navigator.mediaSession.setActionHandler("play", () => {
-    audioRef.current?.play();
-    setPlaying(true);
-  });
+    navigator.mediaSession.setActionHandler("play", () => {
+      audioRef.current?.play();
+      setPlaying(true);
+      navigator.mediaSession.playbackState = "playing";
+    });
 
-  navigator.mediaSession.setActionHandler("pause", () => {
-    audioRef.current?.pause();
-    setPlaying(false);
-  });
+    navigator.mediaSession.setActionHandler("pause", () => {
+      audioRef.current?.pause();
+      setPlaying(false);
+      navigator.mediaSession.playbackState = "paused";
+    });
 
-  navigator.mediaSession.setActionHandler("previoustrack", () => {
-    change(-1);
-  });
+    navigator.mediaSession.setActionHandler("previoustrack", () => {
+      change(-1);
+    });
 
-  navigator.mediaSession.setActionHandler("nexttrack", () => {
-    change(1);
-  });
+    navigator.mediaSession.setActionHandler("nexttrack", () => {
+      change(1);
+    });
 
-}, [track]);
+  }, [track]);
 
   /* ================================
      TIME UPDATE
   ================================= */
 
- function handleTimeUpdate() {
-  const a = audioRef.current;
-  if (!a) return;
+  function handleTimeUpdate() {
+    const a = audioRef.current;
+    if (!a) return;
 
-  const current = a.currentTime;
-  const dur = a.duration;
+    const current = a.currentTime;
+    const dur = a.duration;
 
-  setProgress(current);
-  setDuration(dur || 0);
+    setProgress(current);
+    setDuration(dur || 0);
 
-  // ❗ ВАЖНО: обновляем ТОЛЬКО если есть нормальная длительность
-  if (
-    "mediaSession" in navigator &&
-    typeof dur === "number" &&
-    isFinite(dur) &&
-    dur > 1
-  ) {
-    try {
-      navigator.mediaSession.setPositionState({
-        duration: dur,
-        position: current,
-        playbackRate: 1
-      });
-    } catch {}
+    if (
+      "mediaSession" in navigator &&
+      typeof dur === "number" &&
+      isFinite(dur) &&
+      dur > 1
+    ) {
+      try {
+        navigator.mediaSession.setPositionState({
+          duration: dur,
+          position: current,
+          playbackRate: 1
+        });
+      } catch {}
+    }
   }
-}
-
-  
 
   /* ================================
      SEEK
@@ -124,29 +122,25 @@ useEffect(() => {
      PLAY / PAUSE
   ================================= */
 
- function togglePlay() {
-  if (!audioRef.current) return;
+  function togglePlay() {
+    if (!audioRef.current) return;
 
-  if (audioRef.current.paused) {
-    audioRef.current.play();
-    setPlaying(true);
+    if (audioRef.current.paused) {
+      audioRef.current.play();
+      setPlaying(true);
 
-    // 👇 ДОБАВИЛИ
-    if ("mediaSession" in navigator) {
-      navigator.mediaSession.playbackState = "playing";
-    }
+      if ("mediaSession" in navigator) {
+        navigator.mediaSession.playbackState = "playing";
+      }
+    } else {
+      audioRef.current.pause();
+      setPlaying(false);
 
-  } else {
-    audioRef.current.pause();
-    setPlaying(false);
-
-    // 👇 ДОБАВИЛИ
-    if ("mediaSession" in navigator) {
-      navigator.mediaSession.playbackState = "paused";
+      if ("mediaSession" in navigator) {
+        navigator.mediaSession.playbackState = "paused";
+      }
     }
   }
-}
-
 
   /* ================================
      NEXT / PREV
@@ -193,16 +187,14 @@ useEffect(() => {
       onTouchEnd={mini ? undefined : onTouchEnd}
     >
 
-      {/* CONTAINER */}
       <div
         className="fp-container"
         onClick={(e) => {
           e.stopPropagation();
-          if (mini) onClose();   // открыть full
+          if (mini) onClose();
         }}
       >
 
-        {/* CLOSE */}
         {!mini && (
           <button
             className="fp-close-center"
@@ -215,13 +207,10 @@ useEffect(() => {
           </button>
         )}
 
-        {/* COVER */}
         {!mini && <div className="fp-cover" />}
 
-        {/* TITLE */}
         <h2 className="fp-title">{track.title}</h2>
 
-        {/* PROGRESS */}
         {!mini && (
           <input
             type="range"
@@ -234,7 +223,6 @@ useEffect(() => {
           />
         )}
 
-        {/* CONTROLS */}
         <div className="fp-controls">
 
           {!mini && (
@@ -270,11 +258,28 @@ useEffect(() => {
 
         </div>
 
-        {/* AUDIO */}
         <audio
           ref={audioRef}
           src={track.url}
           autoPlay
+
+          onLoadedMetadata={() => {
+            const a = audioRef.current;
+            if (!a) return;
+
+            setDuration(a.duration);
+
+            if ("mediaSession" in navigator) {
+              try {
+                navigator.mediaSession.setPositionState({
+                  duration: a.duration,
+                  position: 0,
+                  playbackRate: 1
+                });
+              } catch {}
+            }
+          }}
+
           onTimeUpdate={handleTimeUpdate}
           onEnded={() => change(1)}
         />
