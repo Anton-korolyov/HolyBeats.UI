@@ -36,6 +36,44 @@ export default function FullPlayer({
     }
   }, [track]);
 
+
+  /* ================================
+   MEDIA SESSION (LOCKSCREEN CONTROLS)
+================================ */
+
+useEffect(() => {
+  if (!("mediaSession" in navigator)) return;
+
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: track.title,
+    artist: "Holy Beats",
+    artwork: [
+      { src: "/logo.png", sizes: "96x96", type: "image/png" },
+      { src: "/logo.png", sizes: "192x192", type: "image/png" },
+      { src: "/logo.png", sizes: "512x512", type: "image/png" }
+    ]
+  });
+
+  navigator.mediaSession.setActionHandler("play", () => {
+    audioRef.current?.play();
+    setPlaying(true);
+  });
+
+  navigator.mediaSession.setActionHandler("pause", () => {
+    audioRef.current?.pause();
+    setPlaying(false);
+  });
+
+  navigator.mediaSession.setActionHandler("previoustrack", () => {
+    change(-1);
+  });
+
+  navigator.mediaSession.setActionHandler("nexttrack", () => {
+    change(1);
+  });
+
+}, [track]);
+
   /* ================================
      TIME UPDATE
   ================================= */
