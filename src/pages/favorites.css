@@ -1,32 +1,179 @@
-.favorites-page {
-  padding: 20px;
-}
+/* ===============================
+   PAGE
+================================ */
 
-.favorites-list {
+.favorites-page {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  padding: 24px;
+  box-sizing: border-box;
 }
+
+/* ===============================
+   LIST
+================================ */
+
+.favorites-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  padding-bottom: 90px; /* место под мини-плеер */
+}
+
+/* ===============================
+   CARD
+================================ */
 
 .favorite-card {
   background: rgba(255,255,255,0.05);
-  padding: 12px;
-  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 14px 18px;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  transition: .25s;
 }
+
+.favorite-card:hover {
+  border-color: rgba(140,120,255,.6);
+  transform: translateY(-1px);
+}
+
+.favorite-card.active {
+  background: linear-gradient(135deg,#8c78ff33,#ff78c833);
+  border-color: #8c78ff;
+}
+
+/* ===============================
+   LEFT
+================================ */
+
+.fav-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fav-cover {
+  width: 46px;
+  height: 46px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* ===============================
+   TITLE
+================================ */
+
+.track-title {
+  font-size: 16px;
+  color: rgba(255,255,255,.95);
+}
+
+/* ===============================
+   ACTIONS
+================================ */
 
 .fav-actions {
   display: flex;
   gap: 10px;
 }
 
-.favorite-card button {
+.fav-actions button {
   background: transparent;
-  border: 1px solid #555;
+  border: 1px solid rgba(255,255,255,.3);
   color: white;
-  padding: 6px 10px;
+
+  width: 34px;
+  height: 34px;
   border-radius: 8px;
+
   cursor: pointer;
+  transition: .2s;
+}
+
+.fav-actions button:hover {
+  background: rgba(140,120,255,.2);
+  border-color: #8c78ff;
+}
+
+/* ===============================
+   MINI PLAYER
+================================ */
+
+.mini-player {
+
+  background: rgba(10,10,20,.95);
+  padding: 12px;
+  border-radius: 14px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,.6);
+}
+
+/* LEFT */
+
+.mini-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mini-cover {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.mini-title {
+  font-size: 14px;
+}
+
+.mini-time {
+  font-size: 12px;
+  opacity: .7;
+}
+
+/* CENTER */
+
+.mini-center {
+  flex: 1;
+  margin-left: 14px;
+}
+
+/* CONTROLS */
+
+.mini-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.mini-controls button {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.3);
+  color: white;
+
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+
+  cursor: pointer;
+}
+
+/* PROGRESS */
+
+.mini-progress {
+  width: 100%;
 }

@@ -83,7 +83,7 @@ export default function App() {
       </div>
 
       {/* PAGES */}
-      {page === "player" && <Player />}
+      {page === "player" && (<Player authorized={auth} />)}
       {page === "playlists" && auth && <Playlists />}
       {page === "favorites" && auth && <Favorites />}
 

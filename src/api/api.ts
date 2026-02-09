@@ -29,13 +29,18 @@ export async function login(
   const r = await fetch(`${API}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
+   body: JSON.stringify({
+  Email: email,
+  Password: password
+})
   });
 
   if (!r.ok) throw new Error("Login failed");
 
   return r.json();
 }
+
+
 
 /* ================= MODELS ================= */
 

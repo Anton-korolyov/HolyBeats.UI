@@ -67,3 +67,22 @@
   background: rgba(140,120,255,0.25);
   border-color: rgba(140,120,255,0.8);
 }
+/* MAIN ACTION BUTTON */
+.modal button:not(.secondary) {
+  background: linear-gradient(135deg,#8c78ff,#ff78c8);
+  color: white;
+  border: none;
+}
+
+/* Hover */
+.modal button:not(.secondary):hover {
+  opacity: .9;
+}
+.modal input{
+  background: rgba(255,255,255,0.08);
+  color: white;
+}
+
+.modal input::placeholder{
+  color: rgba(255,255,255,.6);
+}

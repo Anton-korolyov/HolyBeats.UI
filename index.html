@@ -13,6 +13,21 @@
     <title>holy beats</title>
   </head>
   <body>
+    <style>
+#splash {
+  position: fixed;
+  inset: 0;
+  background: #0b0b16;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+</style>
+
+<div id="splash">
+  <img src="/logo.png" width="120" />
+</div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

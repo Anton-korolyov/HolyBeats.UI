@@ -12,14 +12,37 @@ import type { Track, Playlist } from "../api/api";
 import FullPlayer from "../components/FullPlayer";
 import LoginModal from "../components/LoginModal";
 import "./player.css";
+type PlayerProps = {
+  authorized: boolean;
+};
 
-function isLoggedIn() {
-  return !!localStorage.getItem("token");
+
+   function ScrollTopButton() {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setShow(window.scrollY > 300);
+    };
+
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+   <button
+  className={`scroll-top-btn ${show ? "show" : ""}`}
+  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+>
+  ⬆
+</button>
+  );
 }
-
-export default function Player() {
+export default function Player({ authorized }: PlayerProps) {
 const [genreFilter, setGenreFilter] = useState<string>("all");
 const [langFilter, setLangFilter] = useState<string>("all");
+const lastPositionUpdate = useRef(0);
+
 
   // ===== DATA =====
   const [tracks, setTracks] = useState<Track[]>([]);
@@ -45,9 +68,10 @@ const filteredTracks = tracks.filter(t =>
   (langFilter === "all" || t.language === langFilter)
 );
   // ===== LOAD =====
-  useEffect(() => {
-    loadAll();
-  }, []);
+useEffect(() => {
+  loadAll();
+}, [authorized]);
+
   function playNext() {
   if (!tracks.length || !current) return;
 
@@ -56,7 +80,8 @@ const filteredTracks = tracks.filter(t =>
   let next = i + 1;
   if (next >= tracks.length) next = 0;
 
-  setCurrent(tracks[next]);
+ setCurrent(tracks[next]);
+setTimeout(() => audioRef.current?.play(), 0);
 }
 function playPrev() {
   if (!tracks.length || !current) return;
@@ -67,16 +92,36 @@ function playPrev() {
   if (prev < 0) prev = tracks.length - 1;
 
   setCurrent(tracks[prev]);
+setTimeout(() => audioRef.current?.play(), 0);
 }
   async function loadAll() {
     const result = await getTracks(1);
     setTracks(result.items);
 
-    if (isLoggedIn()) {
-      setPlaylists(await getPlaylists());
-    }
+   if (authorized) {
+  setPlaylists(await getPlaylists());
+} else {
+  setPlaylists([]);
+  setSelectedPlaylistId(null);
+}
   }
 
+useEffect(() => {
+  const a = audioRef.current;
+  if (!a) return;
+  if (!("mediaSession" in navigator)) return;
+  if (!duration) return;
+
+  const now = Date.now();
+  if (now - lastPositionUpdate.current < 1000) return;
+  lastPositionUpdate.current = now;
+
+  (navigator as any).mediaSession.setPositionState({
+    duration: duration,
+    position: Math.floor(a.currentTime),
+    playbackRate: 1
+  });
+}, [currentTime, duration]);
 
 /* ================================
    MEDIA SESSION (PLAYER)
@@ -135,20 +180,36 @@ function formatTime(sec: number) {
   const s = Math.floor(sec % 60);
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
-  async function handleAddToPlaylist(trackId: number) {
-    if (!isLoggedIn()) {
-      setShowLogin(true);
-      return;
-    }
-
-    if (!selectedPlaylistId) {
-      alert("Select playlist first");
-      return;
-    }
-
-    await addTrackToPlaylist(selectedPlaylistId, trackId);
-    alert("Added to playlist");
+async function handleAddToPlaylist(trackId: number) {
+  if (!authorized) {
+    setShowLogin(true);
+    return;
   }
+
+  // если плейлистов нет → создаём Playlist1
+  if (playlists.length === 0) {
+    await createPlaylist("Playlist1");
+    const updated = await getPlaylists();
+    setPlaylists(updated);
+
+    const first = updated[0];
+    setSelectedPlaylistId(first.id);
+
+    await addTrackToPlaylist(first.id, trackId);
+    alert("Added to Playlist1");
+    return;
+  }
+
+  // если плейлист не выбран → берём первый
+  const targetId =
+    selectedPlaylistId ?? playlists[0].id;
+
+  setSelectedPlaylistId(targetId);
+
+  await addTrackToPlaylist(targetId, trackId);
+  alert("Added to playlist");
+}
+
 
   // ===============================
   // ✅ RENDER
@@ -160,35 +221,52 @@ function formatTime(sec: number) {
       <h1 className="title">🎵 HolyBeats</h1>
 
       {/* PLAYLIST PANEL */}
-      {isLoggedIn() && (
+      {authorized && (
         <div className="playlist-panel">
 
           <h3>📁 Playlists</h3>
 
-          <div className="playlist-create">
-            <input
-              placeholder="New playlist name"
-              value={newPlaylist}
-              onChange={e => setNewPlaylist(e.target.value)}
-            />
-            <button onClick={handleCreatePlaylist}>
-              Create
-            </button>
-          </div>
+ <div className="playlist-row">
 
-          <div className="playlist-list">
-            {playlists.map(p => (
-              <div
-                key={p.id}
-                className={`playlist-chip ${
-                  selectedPlaylistId === p.id ? "active" : ""
-                }`}
-                onClick={() => handleSelectPlaylist(p)}
-              >
-                {p.name}
-              </div>
-            ))}
-          </div>
+  <input
+    className="playlist-input"
+    placeholder="New playlist name"
+    value={newPlaylist}
+    onChange={e => setNewPlaylist(e.target.value)}
+  />
+
+  <button
+    className="playlist-create-btn"
+    onClick={handleCreatePlaylist}
+  >
+    ➕ Create
+  </button>
+
+  <select
+    className="playlist-select"
+    value={selectedPlaylistId ?? ""}
+    onChange={async (e) => {
+      const id = Number(e.target.value);
+      setSelectedPlaylistId(id);
+
+      const p = playlists.find(x => x.id === id);
+      if (p) await handleSelectPlaylist(p);
+    }}
+  >
+    <option value="">Select playlist</option>
+
+    {playlists.map(p => (
+      <option key={p.id} value={p.id}>
+        {p.name}
+      </option>
+    ))}
+  </select>
+
+</div>
+
+
+  
+
 
         </div>
       )}
@@ -258,7 +336,7 @@ function formatTime(sec: number) {
               {/* FAVORITE */}
               <button
                 onClick={() => {
-                  if (!isLoggedIn()) {
+                  if (!authorized) {
                     setShowLogin(true);
                     return;
                   }
@@ -349,16 +427,7 @@ function formatTime(sec: number) {
   onTimeUpdate={() => {
     const a = audioRef.current;
     if (!a) return;
-
     setCurrentTime(a.currentTime);
-
-    if ("mediaSession" in navigator) {
-      navigator.mediaSession.setPositionState({
-        duration: a.duration || 0,
-        position: a.currentTime,
-        playbackRate: 1
-      });
-    }
   }}
   onLoadedMetadata={() => {
     const a = audioRef.current;
@@ -384,15 +453,15 @@ function formatTime(sec: number) {
 
       {/* LOGIN */}
       {showLogin && (
-        <LoginModal
-          onClose={() => setShowLogin(false)}
-          onSuccess={() => {
-            setShowLogin(false);
-            loadAll();
-          }}
-        />
-      )}
-
+  <LoginModal
+    onClose={() => setShowLogin(false)}
+  onSuccess={async () => {
+  setShowLogin(false);
+  await loadAll();
+}}
+  />
+)}
+  <ScrollTopButton />
     </div>
   );
 }

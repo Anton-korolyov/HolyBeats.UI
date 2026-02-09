@@ -147,9 +147,26 @@
   }
 
   /* playlist create */
-  .playlist-create {
-    flex-direction: column;
-  }
+ .playlist-input {
+  flex: 1;
+  padding: 14px 18px;
+
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.2);
+
+  background: rgba(20,20,40,0.6);
+  color: white;
+
+  font-size: 15px;
+  outline: none;
+
+  backdrop-filter: blur(12px);
+}
+
+.playlist-input::placeholder {
+  color: rgba(255,255,255,0.55);
+}
+
 
   .playlist-create input,
   .playlist-create button {
@@ -184,5 +201,331 @@
     transform: none;
     box-shadow: none;
   }
+
+}
+/* ================================
+   PLAYLIST CREATE
+================================ */
+
+.playlist-create-btn {
+  padding: 14px 22px;
+  border-radius: 16px;
+
+  background: linear-gradient(135deg,#8c78ff,#ff78c8);
+  border: none;
+  color: white;
+
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+
+  box-shadow: 0 0 18px rgba(140,120,255,0.45);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.playlist-create-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 24px rgba(255,120,200,0.65);
+}
+
+
+.playlist-input {
+  flex: 1;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.playlist-input::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+.playlist-create-btn {
+  background: linear-gradient(135deg,#8c78ff,#ff78c8);
+  border: none;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.playlist-create-btn:hover {
+  opacity: 0.9;
+}
+.playlist-select {
+  width: 100%;
+  margin: 18px 0;
+  padding: 14px 18px;
+
+  border-radius: 16px;
+  border: 1px solid rgba(140,120,255,0.55);
+
+  background:
+    linear-gradient(135deg,
+      rgba(140,120,255,0.18),
+      rgba(255,120,200,0.12)
+    );
+
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+
+  outline: none;
+  cursor: pointer;
+
+  backdrop-filter: blur(14px);
+  box-shadow: 0 0 18px rgba(140,120,255,0.25);
+}
+
+.playlist-select:hover {
+  box-shadow: 0 0 22px rgba(255,120,200,0.45);
+}
+
+.playlist-select option {
+  background: #0c1022;
+  color: white;
+}
+
+
+.playlist-select option {
+  background: #0c1022;
+  color: white;
+}
+
+.playlist-delete-btn {
+  margin-bottom: 20px;
+  padding: 8px 14px;
+
+  border-radius: 12px;
+  border: none;
+
+  background: rgba(255,80,80,0.15);
+  color: #ff6b6b;
+  cursor: pointer;
+}
+
+.playlist-delete-btn:hover {
+  background: rgba(255,80,80,0.25);
+}
+/* ================================
+   MINI PLAYER (PLAYLISTS)
+================================ */
+
+.mini-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: linear-gradient(180deg,#0b0f1f,#0f132a);
+  border-top: 1px solid rgba(255,255,255,0.08);
+
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px;
+
+  z-index: 9999;
+}
+
+/* LEFT */
+
+.mini-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.mini-title {
+  font-size: 14px;
+  color: white;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mini-time {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+}
+
+/* CENTER */
+
+.mini-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.mini-controls {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.mini-controls button {
+  width: 36px;
+  height: 36px;
+
+  border-radius: 50%;
+  border: none;
+
+  background: rgba(255,255,255,0.12);
+  color: white;
+  cursor: pointer;
+
+  font-size: 16px;
+}
+
+.mini-controls button:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.play-btn {
+  background: linear-gradient(135deg,#8c78ff,#ff78c8);
+}
+
+/* PROGRESS */
+
+.mini-progress {
+  width: 100%;
+  height: 4px;
+
+  appearance: none;
+  border-radius: 10px;
+
+  background: linear-gradient(
+    to right,
+    #8c78ff 0%,
+    #8c78ff 40%,
+    rgba(255,255,255,0.25) 40%,
+    rgba(255,255,255,0.25) 100%
+  );
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .mini-player {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .mini-controls {
+    gap: 14px;
+  }
+}
+/* ============================= */
+/* 📱 FORCE MOBILE COMPACT */
+/* ============================= */
+@media (max-width: 700px) {
+
+/* ============================= */
+/* 📱 MOBILE COMPACT MODE */
+/* ============================= */
+
+  .player {
+    max-width: 100%;
+    margin: 0;
+    padding: 14px ;
+    padding-bottom: 140px !important;
+  }
+
+/* title */
+
+.player h1 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+/* ============================= */
+/* CREATE ROW (INLINE) */
+/* ============================= */
+
+.playlist-create {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 8px;
+}
+
+.playlist-input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px !important;
+  font-size: 13px !important;
+  border-radius: 10px !important;
+}
+
+.playlist-create-btn {
+  padding: 10px 14px !important;
+  font-size: 13px !important;
+  border-radius: 10px !important;
+  width: auto !important;
+  white-space: nowrap;
+}
+
+/* ============================= */
+/* SELECT */
+/* ============================= */
+
+.playlist-select {
+  margin: 10px 0 !important;
+  padding: 10px 12px !important;
+  font-size: 13px !important;
+  border-radius: 10px !important;
+}
+
+/* ============================= */
+/* DELETE */
+/* ============================= */
+
+.playlist-delete-btn {
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+  border-radius: 10px !important;
+}
+
+/* ============================= */
+/* PLAYLIST CARDS */
+/* ============================= */
+
+.card-playlist {
+  padding: 10px !important;
+  border-radius: 12px !important;
+}
+
+.track-title {
+  font-size: 14px !important;
+}
+
+.card-playlist button {
+  padding: 6px 10px !important;
+  font-size: 12px !important;
+}
+
+/* ============================= */
+/* MINI PLAYER */
+/* ============================= */
+
+.mini-player {
+  padding: 10px 12px !important;
+}
+
+.mini-title {
+  font-size: 13px !important;
+}
+
+.mini-controls button {
+  width: 32px !important;
+  height: 32px !important;
+  font-size: 14px !important;
+}
 
 }
