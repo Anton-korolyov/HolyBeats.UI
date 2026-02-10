@@ -62,11 +62,26 @@ export type Playlist = {
 
 export async function getTracks(
   page: number,
+  genre: string,
+  language: string,
   pageSize = 20
-): Promise<{ items: Track[]; hasMore: boolean }> {
+): Promise<{ items: Track[]; total: number; hasMore: boolean }>{
+
+  const params = new URLSearchParams({
+    page: String(page),
+    pageSize: String(pageSize)
+  });
+
+  if (genre && genre !== "all") {
+    params.append("genre", genre);
+  }
+
+  if (language && language !== "all") {
+    params.append("language", language);
+  }
 
   const r = await fetch(
-    `${API}/api/tracks?page=${page}&pageSize=${pageSize}`,
+    `${API}/api/tracks?${params.toString()}`,
     {
       headers: authHeader()
     }
@@ -107,7 +122,13 @@ export async function createPlaylist(name: string) {
 
   if (!r.ok) throw new Error("Create playlist failed");
 }
-
+export async function getTrackFilters(): Promise<{
+  genres: string[];
+  languages: string[];
+}> {
+  const r = await fetch(`${API}/api/tracks/filters`);
+  return r.json();
+}
 export async function deletePlaylist(id: number) {
   const r = await fetch(`${API}/api/playlists/${id}`, {
     method: "DELETE",

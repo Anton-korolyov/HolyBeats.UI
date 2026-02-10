@@ -140,8 +140,8 @@ background-repeat: no-repeat;
 .fp-progress {
   width: 100%;
   margin-bottom: 26px;
-}
 
+}
 /* hide progress in mini */
 
 .fp-overlay.mini .fp-progress {
@@ -244,4 +244,67 @@ background-repeat: no-repeat;
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
+}
+/* ===============================
+   FULL PLAYER PROGRESS BAR
+=============================== */
+/* ===============================
+   FULL PLAYER PROGRESS BAR
+=============================== */
+
+.fp-progress {
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      to right,
+      #8c78ff 0%,
+      #ff78c8 var(--progress, 0%),
+      rgba(255,255,255,0.25) var(--progress, 0%),
+      rgba(255,255,255,0.25) 100%
+    );
+
+  outline: none;
+}
+
+/* TRACK */
+
+.fp-progress::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.fp-progress::-moz-range-track {
+  height: 8px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+/* THUMB */
+
+.fp-progress::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, #8c78ff, #ff78c8);
+  box-shadow:
+    0 0 10px rgba(140,120,255,.8),
+    0 0 18px rgba(255,120,200,.6);
+
+  margin-top: -5px;
+}
+
+.fp-progress::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8c78ff, #ff78c8);
 }

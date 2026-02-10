@@ -211,17 +211,18 @@ export default function FullPlayer({
 
         <h2 className="fp-title">{track.title}</h2>
 
-        {!mini && (
-          <input
-            type="range"
-            className="fp-progress"
-            min={0}
-            max={duration || 0}
-            value={progress}
-            onChange={handleSeek}
-            onClick={(e) => e.stopPropagation()}
-          />
-        )}
+       <input
+  type="range"
+  className="fp-progress"
+  min={0}
+  max={duration || 0}
+  value={progress}
+  style={{
+    ["--progress" as any]:
+      duration ? `${(progress / duration) * 100}%` : "0%"
+  }}
+  onChange={handleSeek}
+/>
 
         <div className="fp-controls">
 

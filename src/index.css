@@ -19,6 +19,8 @@ body {
   background: #0f0f14;
   color: white;
   padding-bottom: 120px;
+    max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* LINKS */
